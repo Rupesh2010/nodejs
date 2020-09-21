@@ -3,8 +3,8 @@ name: 'GitHub Actions to build and push docker image to ECR'
 
 on: 
   push:
-    tags:
-      - v*.*.* 
+    branches:
+      - v*.*.*.*
                    
 jobs:
   deploy:
