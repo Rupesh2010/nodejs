@@ -2,14 +2,13 @@
 name: 'GitHub Actions to build and push docker image to ECR'
 
 on:
-  push:
-    branches: 
-      - UAT
-  workflow_dispatch:
+ workflow_dispatch:
     inputs:
-       git-ref:
-        description: Git Ref (Optional)
-        required: false 
+      image_version:
+        description: Image Version To Promote to UAT
+        default: v1.0.0
+        required: true
+                   
                    
 jobs:
   deploy:
@@ -31,7 +30,7 @@ jobs:
       id: docker-pull
       run: |
         docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
-        docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74
+        docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:${{ github.event.inputs.image_version }}
         
     - name: Login to Amazon ECR
       id: login-ecr
@@ -41,11 +40,11 @@ jobs:
       id: build-image
       run: |
         set -x
-        docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74 $ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74
+        docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74"
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_DEV_REGISTRY: ${{ secrets.registry }}
         ECR_REPOSITORY: nodejs
-        IMAGE_TAG: ${{ steps.get_version.outputs.tag }} 
+        IMAGE_TAG: ${{ github.event.inputs.image_version }} 
