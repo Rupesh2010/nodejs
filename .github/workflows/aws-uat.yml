@@ -1,7 +1,10 @@
 # This workflow will build and push a new container image to Amazon ECR,
 name: 'GitHub Actions to build and push docker image to ECR'
 
-on: 
+on:
+  push:
+    branches: 
+      - UAT
   workflow_dispatch:
     inputs:
        git-ref:
@@ -37,9 +40,9 @@ jobs:
       id: build-image
       run: |
         set -x
-        docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74 $ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74"
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_DEV_REGISTRY: ${{ secrets.registry }}
