@@ -1,6 +1,5 @@
 # This workflow will build and push a new container image to Amazon ECR,
 on:
-  push:
   workflow_dispatch:
     inputs:
       image_version:
