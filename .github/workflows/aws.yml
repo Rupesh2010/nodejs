@@ -2,9 +2,11 @@
 name: 'GitHub Actions to build and push docker image to ECR'
 
 on: 
-  push:
-    tags:
-      - v*.*.* 
+   workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
                    
 jobs:
   deploy:
