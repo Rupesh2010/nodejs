@@ -1,13 +1,11 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [UAT]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [UAT]
-  schedule:
-    - cron: '0 15 * * 5'
+   workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
 
 jobs:
   analyze:
