@@ -30,6 +30,7 @@ jobs:
     - name: Pull the Image from Github Package
       id: docker-pull
       run: |
+        docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
         docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74
         
     - name: Login to Amazon ECR
