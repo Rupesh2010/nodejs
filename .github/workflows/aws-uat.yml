@@ -6,7 +6,7 @@ on:
         description: (Optional)
         required: false
                    
-name: 'GitHub Actions to build and push docker image to ECR'
+name: 'GitHub Packages'
                    
 jobs:
   deploy:
