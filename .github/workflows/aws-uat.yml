@@ -6,7 +6,7 @@ on:
     inputs:
       git-ref:
         description: Image Version To Promote to UAT
-        required: true
+        required: false
                    
                    
 jobs:
