@@ -3,8 +3,8 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      git-ref:
-        description: Git Ref (Optional)
+      image_version:
+        description: (Optional)
         required: false
                    
 name: 'GitHub Actions to build and push docker image to ECR'
@@ -29,7 +29,7 @@ jobs:
       id: docker-pull
       run: |
         docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{ secrets.GITHUB_TOKEN }}
-        docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:v1.0.0.0
+        docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:${{ github.event.inputs.version }}
         
     - name: Login to Amazon ECR
       id: login-ecr
@@ -41,9 +41,9 @@ jobs:
         set -x
         docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:sha-bfa0b74"
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_DEV_REGISTRY: ${{ secrets.registry }}
         ECR_REPOSITORY: nodejs
-        IMAGE_TAG: v1.0.0.0
+        IMAGE_TAG: ${{ github.event.inputs.version }}
