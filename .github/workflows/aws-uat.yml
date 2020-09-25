@@ -2,11 +2,10 @@
 name: 'GitHub Actions to build and push docker image to ECR'
 
 on:
- workflow_dispatch:
+  workflow_dispatch:
     inputs:
-      image_version:
+      git-ref:
         description: Image Version To Promote to UAT
-        default: v1.0.0
         required: true
                    
                    
