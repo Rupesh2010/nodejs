@@ -31,15 +31,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_UAT }}
         aws-region: us-east-1
     
-    - name: Pull the Image from Dev ECR
-      id: login-ecr-dev
+    - name: Pull the Image from Github Package
+      id: docker-pull
       run: |
-        docker login -u{secrets.username} -p {secrets.password} ${ECR_DEV_REGISTRY}
-        docker pull ${ECR_DEV_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-      env:
-        ECR_DEV_REGISTRY: ${{ secrets.registry }}
-        ECR_REPOSITORY: nodejs
-        IMAGE_TAG: ${{ steps.get_version.outputs.tag }}
+        docker pull docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74
         
     - name: Login to Amazon ECR
       id: login-ecr
@@ -49,7 +44,7 @@ jobs:
       id: build-image
       run: |
         set -x
-        docker tag $ECR_DEV_REGISTRY/ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag docker.pkg.github.com/rupesh2010/nodejs/nodejs:sha-bfa0b74 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       env:
